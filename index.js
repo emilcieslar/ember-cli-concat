@@ -125,6 +125,17 @@ module.exports = {
   */
 
   useSelfClosingTags: false,
+  
+  
+  /**
+  Whether or not path should be prepended with leading slash.
+
+  @property userRelativePath
+  @type Boolean
+  @default false
+   */
+  useRelativePath: true,
+ 
 
   /**
   Whether or not to wrap the concatenated javascript in an eval statement.
@@ -172,12 +183,15 @@ module.exports = {
       } else {
         return undefined;
       }
-      return concat ? [this.outputAppPath(ext)] : [this.vendorPath(ext), this.appPath(ext)];
+      return concat ?
+        [this.outputAppPath(ext)] :
+        [this.vendorPath(ext, this.useRelativePath), this.appPath(ext, this.useRelativePath)];
     }
   },
 
   outputAppPath: function(ext) {
-    return this.getAssetTag(ext, "/" + this.outputDir + "/" + this.outputFileName + "." + ext);
+    var forwardSlash = this.useRelativePath ? '' : '/';
+    return this.getAssetTag(ext, forwardSlash + this.outputDir + "/" + this.outputFileName + "." + ext);
   },
 
   appPath: function(ext, relPath) {
